@@ -330,14 +330,16 @@ class SimpleITKImage(BaseModel):
                     )
         return extra_metadata
 
-    def save(self, output_directory: Path) -> Tuple[PanImg, Set[PanImgFile]]:
-        pk = uuid4()
-
-        work_dir = Path(output_directory) / self.name
-        work_dir.mkdir()
+    def save(self, output_directory: Path, output_filename: str) -> Tuple[PanImg, Set[PanImgFile]]:
+        
+        # pk = uuid4()
+        # work_dir = Path(output_directory) / self.name
+        # work_dir.mkdir()
+        
+        work_dir = output_directory
 
         new_image = PanImg(
-            pk=pk,
+            pk=output_filename,
             name=self.name,
             width=self.width,
             height=self.height,

@@ -16,6 +16,7 @@ def convert(
     *,
     input_directory: Path,
     output_directory: Path,
+    output_filename: str,
     builders: Optional[Iterable[ImageBuilder]] = None,
     post_processors: Optional[Iterable[PostProcessor]] = None,
     recurse_subdirectories: bool = True,
@@ -33,6 +34,7 @@ def convert(
     _convert_directory(
         input_directory=input_directory,
         output_directory=output_directory,
+        output_filename=output_filename,
         builders=builders,
         consumed_files=consumed_files,
         new_images=new_images,
@@ -61,6 +63,7 @@ def _convert_directory(
     *,
     input_directory: Path,
     output_directory: Path,
+    output_filename: str,
     builders: Iterable[ImageBuilder],
     consumed_files: Set[Path],
     new_images: Set[PanImg],
@@ -105,6 +108,7 @@ def _convert_directory(
             builder=builder,
             files=builder_files,
             output_directory=output_directory,
+            output_filename=output_filename,
         )
 
         new_images |= builder_result.new_images
@@ -124,7 +128,7 @@ def _convert_directory(
 
 
 def _build_files(
-    *, builder: ImageBuilder, files: Set[Path], output_directory: Path
+    *, builder: ImageBuilder, files: Set[Path], output_directory: Path, output_filename: str,
 ) -> PanImgResult:
     new_images = set()
     new_image_files: Set[PanImgFile] = set()
@@ -134,7 +138,8 @@ def _build_files(
     try:
         for result in builder(files=files):
             n_image, n_image_files = result.save(
-                output_directory=output_directory
+                output_directory=output_directory,
+                output_filename=output_filename
             )
 
             new_images.add(n_image)
